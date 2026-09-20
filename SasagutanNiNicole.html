@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Sagutan mo to nicole</title>
+<style>
+  :root{
+    --bg:#0d0f14; --card:#151821; --accent:#1e90ff; --accent-glow:0 0 12px #1e90ff;
+    --text:#e9ecf2; --muted:#9aa3b2; --radius:10px;
+  }
+  body{background:var(--bg);
+  color:var(--text);
+  font-family:"Segoe UI",Arial,sans-serif;margin:0;padding:28px;}
+
+  
+  .wrap {
+  max-width:980px;
+  margin:0 
+  auto;background:var(--card);
+  padding:28px;
+  border-radius:14px; 
+  box-shadow:0 10px 40px rgba(0,0,0,.6);
+  border:1px solid #232734;}
+  h1{margin:0 0 18px 0;color:var(--accent);
+  text-shadow:var(--accent-glow);text-align:center;
+    }
+  
+  .meta {
+  color:var(--muted);
+  text-align:center;
+  margin-bottom:18px;
+  }
+  
+  .q{background:#141822;
+  padding:14px;
+  border-radius:10px;
+  margin-bottom:12px;
+  border-left:4px solid var(--accent);
+  transition:.12s;
+  box-shadow:0 6px 18px rgba(0,0,0,.4);
+    }
+  .q:
+  hover{transform:translateX(6px);
+  box-shadow:0 12px 30px rgba(30,144,255,0.08);
+       }
+  
+  .q strong{
+    display:block;
+    margin-bottom:8px;
+  }
+  .choices label{
+  display:block;
+  cursor:pointer;
+  padding:6px 0;
+  color:var(--text);
+  }
+  
+  input[type="radio"]
+  {transform:scale(1.15);
+   margin-right:8px;
+   accent-color:var(--accent);
+  }
+  
+  .controls{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:16px;
+  align-items:center
+  }
+  
+  button{
+  background:var(--accent);
+  color:#000;border:none;
+  padding:10px 16px;
+  border-radius:10px;
+  cursor:pointer;
+  box-shadow:var(--accent-glow);
+  font-weight:600
+  }
+  
+  button.secondary{
+  background:#0b1220;
+  color:var(--text);
+  border:1px solid rgba(255,255,255,.04)
+  }
+  
+  #result{
+  margin-top:18px;
+  font-size:20px;
+  color:var(--accent);
+  font-weight:700;
+}
+  
+  #answers{
+  margin-top:14px;
+  background:#0f1724;
+  padding:12px;
+  border-radius:10px;
+  border-left:4px solid #6df6ff;
+  color:var(--muted)
+}
+  
+  .small{
+  font-size:13px;
+  color:var(--muted);
+  margin-top:8px
+  }
+  
+  @media(max-width:640px) { 
+      
+  .wrap{padding:16px} button{width:100%}
+  
+                          
+  .controls{flex-direction:column} 
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>sasagutan daw ni nicole??</h1>
+    <p class="meta"><strong>try daw ni thysa nicole</strong> — type shii reviewer?</p>
+
+    <form id="quiz"></form>
+
+    <div class="controls">
+      <button id="submitBtn" type="button">Tapos ka na nicole?</button>
+      <button id="showKeyBtn" type="button" class="secondary">Sirit na ba nicole?</button>
+      <div style="flex:1"></div>
+      <div class="small">Reload site to restartt</div>
+    </div>
+
+    <div id="result" aria-live="polite"></div>
+    <div id="answers" style="display:none"></div>
+  </div>
+
+<script>
+
+const questions = [
+  // INFORMATION PRIVACY
+
+  {
+    q: "Data privacy is the right of an individual to:",
+    choices: [
+      "Control all government activities",
+      "Access every person's information",
+      "Keep private information from being disclosed and live free from intrusion",
+      "Share personal information freely"
+    ],
+    correct: 2
+  },
+
+  {
+    q: "A data breach at a school may put students' PII in the hands of:",
+    choices: [
+      "Criminals who could commit identity theft",
+      "Teachers only",
+      "Government employees",
+      "Other students"
+    ],
+    correct: 0
+  },
+
+  {
+    q: "Which law protects individual personal information in information and communications systems in the Philippines?",
+    choices: [
+      "Republic Act 9165",
+      "Republic Act 8792",
+      "Republic Act 10173",
+      "Republic Act 11032"
+    ],
+    correct: 2
+  },
+
+  {
+    q: "A data subject is:",
+    choices: [
+      "A company that stores information",
+      "An individual whose personal information is processed",
+      "A government database",
+      "A computer programmer"
+    ],
+    correct: 1
+  },
+
+  {
+    q: "What is an online identity?",
+    choices: [
+      "A physical ID card",
+      "A bank account number",
+      "A social identity established by an internet user online",
+      "A government-issued passport"
+    ],
+    correct: 2
+  },
+
+  {
+    q: "Which of the following is an example of Personal Identifiable Information?",
+    choices: [
+      "Full name",
+      "Favorite color",
+      "Weather condition",
+      "Favorite food"
+    ],
+    correct: 0
+  },
+
+  {
+    q: "Which is listed as personal information in the module?",
+    choices: [
+      "Blood pressure",
+      "Favorite game",
+      "Home number",
+      "Favorite movie"
+    ],
+    correct: 2
+  },
+
+  {
+    q: "Which of the following is classified as Sensitive Personal Information?",
+    choices: [
+      "Email address",
+      "Tax Identification Number",
+      "Job position",
+      "Cellphone number"
+    ],
+    correct: 1
+  },
+
+  {
+    q: "The person or legal entity that determines how personal data will be processed is the:",
+    choices: [
+      "Data subject",
+      "Personal Information Controller",
+      "Personal Information Processor",
+      "Internet provider"
+    ],
+    correct: 1
+  },
+
+  {
+    q: "A third party that processes personal data on behalf of a data controller is called a:",
+    choices: [
+      "Personal Information Processor",
+      "Data subject",
+      "Data owner",
+      "Cybersecurity officer"
+    ],
+    correct: 0
+  },
+
+  {
+    q: "Which of the following is one of the rights of a data subject?",
+    choices: [
+      "Right to hack",
+      "Right to access",
+      "Right to spy",
+      "Right to steal"
+    ],
+    correct: 1
+  },
+
+  {
+    q: "Which right allows a data subject to request that inaccurate personal information be corrected?",
+    choices: [
+      "Right to object",
+      "Right to damages",
+      "Right to correct",
+      "Right to complain"
+    ],
+    correct: 2
+  },
+
+  {
+    q: "Consent should be:",
+    choices: [
+      "Freely given, specific, and informed",
+      "Forced and permanent",
+      "Hidden from the data subject",
+      "Given without explanation"
+    ],
+    correct: 0
+  },
+
+  {
+    q: "A data subject may be able to do what with consent?",
+    choices: [
+      "Sell another person's information",
+      "Withdraw consent easily",
+      "Access government secrets",
+      "Remove all online accounts"
+    ],
+    correct: 1
+  },
+
+  {
+    q: "Which of the following is included among the rights of a data subject?",
+    choices: [
+      "Right to impersonate",
+      "Right to spread information",
+      "Right to damage",
+      "Right to data portability"
+    ],
+    correct: 3
+  },
+
+  {
+    q: "Why is data privacy important?",
+    choices: [
+      "It allows everyone to access private records",
+      "It prevents all internet use",
+      "It helps protect personal information from misuse",
+      "It removes the need for cybersecurity"
+    ],
+    correct: 2
+  },
+
+
+  // SOCIAL MEDIA
+
+  {
+    q: "Social media can be described as online platforms used for:",
+    choices: [
+      "Only buying products",
+      "Sharing, commenting, and interacting with an online community",
+      "Only watching movies",
+      "Only sending emails"
+    ],
+    correct: 1
+  },
+
+  {
+    q: "Which of the following is listed as a social media platform in the PDF?",
+    choices: [
+      "Instagram",
+      "Windows",
+      "Google Drive",
+      "Microsoft Word"
+    ],
+    correct: 0
+  },
+
+  {
+    q: "Which is an example of a negative effect of social media on communication?",
+    choices: [
+      "Better spelling",
+      "Information overload",
+      "Improved face-to-face communication",
+      "Less online activity"
+    ],
+    correct: 2
+  },
+
+  {
+    q: "Which communication style is associated with social media?",
+    choices: [
+      "Long handwritten letters",
+      "Abbreviations",
+      "No written communication",
+      "Only formal speeches"
+    ],
+    correct: 1
+  },
+];
+  
+const quiz = document.getElementById('quiz');
+
+questions.forEach((item, idx) => {
+  const block = document.createElement('div');
+  block.className = 'q';
+  let inner = `<strong>${idx+1}. ${item.q}</strong><div class="choices">`;
+  item.choices.forEach((ch,i)=> inner += `<label><input type="radio" name="q${idx}" value="${i}"> ${String.fromCharCode(65+i)}. ${ch}</label>`);
+  inner += `</div>`;
+  block.innerHTML = inner;
+  quiz.appendChild(block);
+});
+
+
+const submitBtn = document.getElementById('submitBtn');
+const showKeyBtn = document.getElementById('showKeyBtn');
+const resultDiv = document.getElementById('result');
+const answersDiv = document.getElementById('answers');
+
+submitBtn.addEventListener('click', () => {
+
+  document.querySelectorAll('input[type="radio"]').forEach(i=> i.disabled = true);
+
+  let score = 0;
+  questions.forEach((q, i) => {
+    const sel = document.querySelector(`input[name="q${i}"]:checked`);
+    const val = sel ? Number(sel.value) : null;
+    if(val === q.correct) score++;
+  });
+  resultDiv.textContent = `Score: ${score} / ${questions.length}`;
+
+  answersDiv.style.display = 'none';
+  answersDiv.innerHTML = '';
+});
+
+showKeyBtn.addEventListener('click', () => {
+
+  let html = '<h3>Answer Key</h3>';
+  html += '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;">';
+  questions.forEach((q,i)=> {
+    html += `<div><strong>${i+1}.</strong> ${String.fromCharCode(65+q.correct)}. ${q.choices[q.correct]}</div>`;
+  });
+  html += '</div>';
+  answersDiv.innerHTML = html;
+  answersDiv.style.display = 'block';
+
+  document.querySelectorAll('input[type="radio"]').forEach(i=> i.disabled = true);
+});
+</script>
+</body>
+</html>
