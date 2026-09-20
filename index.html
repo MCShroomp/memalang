@@ -39,16 +39,38 @@
   border-left:4px solid var(--accent);
   transition:.12s;
   box-shadow:0 6px 18px rgba(0,0,0,.4);
-    }
-  .q:
   hover{transform:translateX(6px);
   box-shadow:0 12px 30px rgba(30,144,255,0.08);
-       }
+    }}
   
   .q strong{
     display:block;
     margin-bottom:8px;
   }
+.q.correct {
+  border-left: 4px solid #32cd32;
+  background: rgba(50, 205, 50, 0.08);
+}
+
+.q.wrong {
+  border-left: 4px solid #ff4d4d;
+  background: rgba(255, 77, 77, 0.08);
+}
+
+.q.unanswered {
+  border-left: 4px solid #ffd43b;
+  background: rgba(255, 212, 59, 0.08);
+}
+
+.choice-correct {
+  color: #32cd32 !important;
+  font-weight: 700;
+}
+
+.choice-wrong {
+  color: #ff4d4d !important;
+  font-weight: 700;
+}
   .choices label{
   display:block;
   cursor:pointer;
@@ -384,14 +406,48 @@ const answersDiv = document.getElementById('answers');
 
 submitBtn.addEventListener('click', () => {
 
-  document.querySelectorAll('input[type="radio"]').forEach(i=> i.disabled = true);
+  document.querySelectorAll('input[type="radio"]').forEach(i => {
+    i.disabled = true;
+  });
 
   let score = 0;
+
   questions.forEach((q, i) => {
+    const block = document.querySelectorAll('.q')[i];
     const sel = document.querySelector(`input[name="q${i}"]:checked`);
+
+    // Remove old results in case submit is clicked again
+    block.classList.remove('correct', 'wrong', 'unanswered');
+
+    // Reset choice colors
+    block.querySelectorAll('label').forEach(label => {
+      label.classList.remove('choice-correct', 'choice-wrong');
+    });
+
     const val = sel ? Number(sel.value) : null;
-    if(val === q.correct) score++;
+
+    // Highlight the correct answer
+    const labels = block.querySelectorAll('label');
+    labels[q.correct].classList.add('choice-correct');
+
+    if (val === null) {
+      // No answer selected
+      block.classList.add('unanswered');
+
+    } else if (val === q.correct) {
+      // Correct answer
+      score++;
+      block.classList.add('correct');
+
+    } else {
+      // Wrong answer
+      block.classList.add('wrong');
+
+      // Highlight the selected wrong answer
+      labels[val].classList.add('choice-wrong');
+    }
   });
+
   resultDiv.textContent = `Score: ${score} / ${questions.length}`;
 
   answersDiv.style.display = 'none';
